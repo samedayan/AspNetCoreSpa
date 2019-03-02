@@ -60,6 +60,7 @@ namespace AspNetCoreSpa.Web.Extensions
             services.AddDbContextPool<ApplicationDbContext>(options =>
             {
                 string useSqLite = Startup.Configuration["Data:useSqLite"];
+                string useMySql = Startup.Configuration["Data:useMySql"];
                 string useInMemory = Startup.Configuration["Data:useInMemory"];
                 if (useInMemory.ToLower() == "true")
                 {
@@ -74,6 +75,14 @@ namespace AspNetCoreSpa.Web.Extensions
                         //b.UseNetTopologySuite();
                     });
                 }
+                else if(useMySql.ToLower() == "true")
+                {
+                    var connection = Startup.Configuration["Data:MySqlConnectionString"];
+                    options.UseMySql(connection, b =>
+                    {
+                        b.MigrationsAssembly("AspNetCoreSpa.Web");
+                    });
+                } 
                 else
                 {
                     var connection = Startup.Configuration["Data:SqlServerConnectionString"];
